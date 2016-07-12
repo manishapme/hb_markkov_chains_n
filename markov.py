@@ -30,15 +30,15 @@ def make_chains(text_string):
 
     word_list = text_string.split()
 
-    for i in range(len(word_list)-1): 
+    for i in range(len(word_list)-1):
         bi_gram = (word_list[i], word_list[i+1]) # "("would", "you")
-        if i <= (len(word_list)-3): # test that the next value actually exists to avoid errors
+        try:
             next_word = word_list[i+2] # "could"
-        if bi_gram in chains:
-            chains[bi_gram].append(next_word)
-        else:
-            chains[bi_gram] = chains.get(bi_gram, [next_word])
-    print chains
+        except IndexError:
+            next_word = None
+        if bi_gram not in chains:
+            chains[bi_gram] = []
+        chains[bi_gram].append(next_word)
     return chains
 
 

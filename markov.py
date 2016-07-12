@@ -8,9 +8,9 @@ def open_and_read_file(file_path):
     the file's contents as one string of text.
     """
 
-    # your code goes here
+    file_data = open(file_path).read()
 
-    return "This should be a variable that contains your file text as one long string"
+    return file_data
 
 
 def make_chains(text_string):
@@ -28,8 +28,17 @@ def make_chains(text_string):
 
     chains = {}
 
-    # your code goes here
+    word_list = text_string.split()
 
+    for i in range(len(word_list)-1): 
+        bi_gram = (word_list[i], word_list[i+1]) # "("would", "you")
+        if i <= (len(word_list)-3): # test that the next value actually exists to avoid errors
+            next_word = word_list[i+2] # "could"
+        if bi_gram in chains:
+            chains[bi_gram].append(next_word)
+        else:
+            chains[bi_gram] = chains.get(bi_gram, [next_word])
+    print chains
     return chains
 
 

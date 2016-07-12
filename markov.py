@@ -47,28 +47,20 @@ def make_text(chains):
 
     text = ""
 
-    current_key = ()
-    new_key = ()
+    current_key = choice(chains.keys())
 
     while True:
 
         try:
-            if not current_key:
-                current_key = choice(chains.keys())
-            else:
-                current_key = new_key
-
             next_random_word = choice(chains[current_key])
 
             text += " ".join(current_key) + " " + next_random_word + " "
 
-            new_key = (current_key[1], next_random_word)
-            # print new_key
+            current_key = (current_key[1], next_random_word)
 
         except TypeError:
             break
 
-    print text
     return text
 
 

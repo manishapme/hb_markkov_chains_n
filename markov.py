@@ -15,7 +15,7 @@ def open_and_read_file(file_path):
     return file_data
 
 
-def make_chains(text_string, n=3):
+def make_chains(text_string, n=5):
     """Takes input text as string; returns _dictionary_ of markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -32,7 +32,7 @@ def make_chains(text_string, n=3):
 
     word_list = text_string.split()
 
-    for i in range(len(word_list)-n-1):
+    for i in range(len(word_list)-n):
         try:
             idx = i
             n_gram = []
@@ -43,14 +43,13 @@ def make_chains(text_string, n=3):
         except KeyError:
             print "error"
         try:
-            next_word = word_list[i+n] # "could"
+            next_word = word_list[i+n]
         except IndexError:
             next_word = None
         if n_gram not in chains:
             chains[n_gram] = []
         chains[n_gram].append(next_word)
-
-    print chains
+    
     return chains
 
 def make_text(chains):
@@ -63,13 +62,15 @@ def make_text(chains):
 
         try:
             next_random_word = choice(chains[current_key])
-
             text += " " + next_random_word
 
-            current_key = (current_key[1], next_random_word)
-            # This is where the error is. We need an n-ple.
+            # convert tuple to list to get n-1 items for next key
+            current_key_list = [item for item in current_key]# create list
+            current_key_list = current_key_list[1:] # slice n-1 items
+            current_key_list.append(next_random_word) # add last word
+            current_key = tuple(current_key_list) # create new key of tuple with n items
 
-        except TypeError:
+        except KeyError:
             break
 
     return text

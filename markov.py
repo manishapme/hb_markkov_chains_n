@@ -67,6 +67,7 @@ def make_text(chains):
             text += " " + next_random_word
 
             current_key = (current_key[1], next_random_word)
+            # This is where the error is. We need an n-ple.
 
         except TypeError:
             break

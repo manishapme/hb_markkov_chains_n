@@ -3,19 +3,21 @@ from random import choice
 from sys import argv
 
 
-def open_and_read_file(file_path):
+def open_and_read_file(file_path1, file_path2):
     """Takes file path as string; returns text as string.
 
     Takes a string that is a file path, opens the file, and turns
     the file's contents as one string of text.
     """
 
-    file_data = open(file_path).read()
+    file1_data = open(file_path1).read()
+    file2_data = open(file_path2).read()
+    file_data = file1_data + file2_data
 
     return file_data
 
 
-def make_chains(text_string, n=5):
+def make_chains(text_string, n=3):
     """Takes input text as string; returns _dictionary_ of markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -56,6 +58,9 @@ def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
     current_key = choice(chains.keys())
+    while not current_key[0].istitle():
+        current_key = choice(chains.keys())
+
     text = " ".join(current_key)
 
     while True:
@@ -63,12 +68,16 @@ def make_text(chains):
         try:
             next_random_word = choice(chains[current_key])
             text += " " + next_random_word
+            if text[-1].isalnum() or text[-1] == "," or text[-1] == "-":
 
-            # convert tuple to list to get n-1 items for next key
-            current_key_list = [item for item in current_key]# create list
-            current_key_list = current_key_list[1:] # slice n-1 items
-            current_key_list.append(next_random_word) # add last word
-            current_key = tuple(current_key_list) # create new key of tuple with n items
+                # convert tuple to list to get n-1 items for next key
+                current_key_list = [item for item in current_key] # create list
+                current_key_list = current_key_list[1:] # slice n-1 items
+                current_key_list.append(next_random_word) # add last word
+                current_key = tuple(current_key_list) # create new key of tuple with n items
+
+            else:
+                break
 
         except KeyError:
             break
@@ -77,7 +86,7 @@ def make_text(chains):
 
 
 # Open the file and turn it into one long string
-input_text = open_and_read_file(argv[1])
+input_text = open_and_read_file(argv[1], argv[2])
 
 # Get a Markov chain
 chains = make_chains(input_text)

@@ -45,16 +45,15 @@ def make_chains(text_string):
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
-    text = ""
-
     current_key = choice(chains.keys())
+    text = " ".join(current_key)
 
     while True:
 
         try:
             next_random_word = choice(chains[current_key])
 
-            text += " ".join(current_key) + " " + next_random_word + " "
+            text += " " + next_random_word
 
             current_key = (current_key[1], next_random_word)
 

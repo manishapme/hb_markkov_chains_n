@@ -1,5 +1,7 @@
 from random import choice
 
+from sys import argv
+
 
 def open_and_read_file(file_path):
     """Takes file path as string; returns text as string.
@@ -13,7 +15,7 @@ def open_and_read_file(file_path):
     return file_data
 
 
-def make_chains(text_string):
+def make_chains(text_string, n=3):
     """Takes input text as string; returns _dictionary_ of markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -30,17 +32,26 @@ def make_chains(text_string):
 
     word_list = text_string.split()
 
-    for i in range(len(word_list)-1):
-        bi_gram = (word_list[i], word_list[i+1]) # "("would", "you")
+    for i in range(len(word_list)-n-1):
         try:
-            next_word = word_list[i+2] # "could"
+            idx = i
+            n_gram = []
+            while idx < i+n:
+                n_gram.append(word_list[idx])
+                idx += 1
+            n_gram = tuple(n_gram)
+        except KeyError:
+            print "error"
+        try:
+            next_word = word_list[i+n] # "could"
         except IndexError:
             next_word = None
-        if bi_gram not in chains:
-            chains[bi_gram] = []
-        chains[bi_gram].append(next_word)
-    return chains
+        if n_gram not in chains:
+            chains[n_gram] = []
+        chains[n_gram].append(next_word)
 
+    print chains
+    return chains
 
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
@@ -63,10 +74,8 @@ def make_text(chains):
     return text
 
 
-input_path = "green-eggs.txt"
-
 # Open the file and turn it into one long string
-input_text = open_and_read_file(input_path)
+input_text = open_and_read_file(argv[1])
 
 # Get a Markov chain
 chains = make_chains(input_text)
